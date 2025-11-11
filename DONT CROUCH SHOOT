@@ -1,0 +1,97 @@
+fx_version 'cerulean'
+game 'gta5'
+
+author 'You'
+description 'Prevents shooting while crouched/ducking'
+version '1.0.0'
+
+client_script 'client.lua'
+:joy:
+Click to react
+:thumbsup:
+Click to react
+:white_check_mark:
+Click to react
+Add Reaction
+Edit
+Forward
+More
+[03:08 PM]Tuesday, 11 November 2025 03:08 PM
+-- Config
+local BLOCK_ATTACK_WHEN_DUCKING = true
+local FORCE_UNARMED_ON_SHOOT = true    -- if set true, will force unarmed if a shot was detected while ducking
+
+-- Common attack controls to block (covers mouse, controller, melee)
+local attackControls = {
+    24,  -- INPUT_ATTACK (MOUSE/PRIMARY FIRE)
+    257, -- INPUT_ATTACK2 (GAMEPAD/ALT FIRE)
+    69,  -- INPUT_VEH_ATTACK (sometimes used)
+    142, -- INPUT_MELEE_ATTACK_ALTERNATE
+    141, -- INPUT_MELEE_ATTACK_LIGHT
+    140, -- INPUT_MELEE_ATTACK_HEAVY
+    263, -- INPUT_MELEE_ATTACK_1
+    264, -- INPUT_MELEE_ATTACK_2
+}
+
+Citizen.CreateThread(function()
+    while true do
+        local waitTime = 50
+        local ped = PlayerPedId()
+        if ped and ped ~= 0 and not IsPedInAnyVehicle(ped, true) then
+            -- only check more often when on foot
+            waitTime = 0
+
+            -- IsPedDucking returns true while crouch/ducking
+            if IsPedDucking(ped) then
+                if BLOCK_ATTACK_WHENDUCKING then
+                    for , controlId in ipairs(attackControls) do
+                        DisableControlAction(0, controlId, true)
+                    end
+                end
+
+                -- Extra safety: if the ped is already shooting, try to stop it
+                if FORCE_UNARMED_ON_SHOOT then
+                    if IsPedShooting(ped) then
+                        -- Force unarmed immediately
+                        GiveWeaponToPed(ped, WEAPON_UNARMED, 0, false, true)
+                        SetCurrentPedWeapon(ped, WEAPON_UNARMED, true)
+                        -- Clear any firing tasks to be extra safe
+                        ClearPedTasksImmediately(ped)
+                    end
+                end
+            end
+        end
+        Citizen.Wait(waitTime)
+    end
+end)
+:joy:
+Click to react
+:thumbsup:
+Click to react
+:white_check_mark:
+Click to react
+Add Reaction
+Edit
+Forward
+More
+
+Message @Ticket Tool
+﻿
+Ticket Tool’s profile
+
+
+Ticket Tool
+VERIFIED APP
+APP
+Add Note (only visible to you)
+Ticket Tool
+#4843
+
+About Me
+About Me
+» Help command /help
+» Setup command /setup
+» Debug command /debug
+» Docs https://tt.bot/docs
+» Support https://tt.bot/support
+» Dashboard https://tt.bot/dashboard
